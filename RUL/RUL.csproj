@@ -42,6 +42,7 @@
     <Compile Include="Color.cs" />
     <Compile Include="Hues.cs" />
     <Compile Include="LuminosityTypes.cs" />
+    <Compile Include="RandObject.cs" />
     <Compile Include="RulCol.cs" />
     <Compile Include="InclusionOptions.cs" />
     <Compile Include="MathHelper.cs" />

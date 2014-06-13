@@ -75,14 +75,16 @@ namespace RUL.Color
         /// <param name="hue">The approximate hue of the random color</param>
         public static Col RandColor(Hues hue)
         {
-            float r = Rul.RandFloat();
-            //#TODO : replace with RUL solution
-            if (r < 1F / 3F)
-                return RandColor(hue, LuminosityTypes.Light);
-            else if (r < 2F / 3F)
-                return RandColor(hue, LuminosityTypes.Medium);
-            else
-                return RandColor(hue, LuminosityTypes.Dark);
+            LuminosityTypes luminosity = Rul.RandElement(LuminosityTypes.Light, LuminosityTypes.Medium, LuminosityTypes.Dark);          
+            return RandColor(hue, luminosity);
+        }
+
+        /// <summary>
+        /// Returns a random color whose r,g,b and a components are between those of colA and colB
+        /// </summary>
+        public static Col RandColor(Col colA, Col colB)
+        {
+            return new Col(Rul.RandInt(colA.R, colB.R), Rul.RandInt(colA.G, colB.G), Rul.RandInt(colA.B, colB.B), Rul.RandInt(colA.A, colB.A));
         }
 
         #endregion

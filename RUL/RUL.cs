@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace RUL
 {
@@ -222,6 +223,103 @@ namespace RUL
             NoiseGenerator texGen = new NoiseGenerator(width, height);
             return null;
         }
+
+        #endregion
+
+        #region RandomSelections
+
+        /// <summary>
+        /// Returns a random element from the given array.
+        /// </summary>
+        public static T RandElement<T>(params T[] elements)
+        {
+            return elements[RandInt(elements.Length)];
+        }
+
+        /// <summary>
+        /// Returns a random element from the given array with the specified probabilities for each element
+        /// </summary>
+        /// <param name="elements">The selection of elements</param>
+        /// <param name="probabilities">The probability for each element</param>
+        public static T RandElement<T>(T[] elements, float[] probabilities)
+        {
+            if (elements.Length == 0)
+                throw new ArgumentException("Element array cannot be empty");
+            if (probabilities.Length == 0)
+                return RandElement(elements);
+
+            float pSum = probabilities.Sum();
+
+            //Add equal probabilities if the probabilities array is not long enough
+            if (probabilities.Length < elements.Length && pSum < 1)
+            {
+                int missing = elements.Length - probabilities.Length;
+                float[] additional = new float[missing];
+                for (int i = 0; i < additional.Length; i++)
+                    additional[i] = (1 - pSum) / (float)missing;
+                float[] allProbs = new float[elements.Length];
+                probabilities.CopyTo(allProbs, 0);
+                additional.CopyTo(allProbs, probabilities.Length);
+
+                probabilities = allProbs;
+            }
+
+            //Correct invalid probabilities
+            for (int i = 0; i < probabilities.Length; i++)
+                probabilities[i] = MathHelper.Clamp(probabilities[i], 0, 1);                
+            
+            //Make sure the probabilities add up to 1
+            float difference = 1- pSum;
+            //Sum too low ? Add missing probability to last element if possible
+            if (!MathHelper.FloatsEqual(difference,0) && difference > 0)
+            {
+                for (int i = probabilities.Length - 1; i <= 0 && difference > 0 && !MathHelper.FloatsEqual(difference, 0); i++)
+                {
+                    float buffer = 1 - probabilities[i];
+                    probabilities[i] += Math.Min(buffer, difference);
+                    difference -= buffer;
+                }
+            }
+            //Sum too high ? Subtract excess probability from last element if possible
+            else if (!MathHelper.FloatsEqual(difference,0) && difference < 0)
+            {
+                for (int i = probabilities.Length - 1; i <= 0 && difference < 0 && !MathHelper.FloatsEqual(difference,0); i++)
+                {
+                    float buffer = probabilities[i];
+                    probabilities[i] += Math.Max(buffer, difference);
+                    difference += buffer;
+                }
+            }
+
+            float r = Rul.RandFloat();
+            float f = 0;
+            for (int i = 0; i < elements.Length; i++)
+            {
+                if (probabilities.Length > i)
+                {
+                    f += probabilities[i];
+                    if (r <= f)
+                        return elements[i];
+                }
+            }
+            return elements[elements.Length - 1];
+        }
+
+        /// <summary>
+        /// Returns a random object from the given array of RandObjects
+        /// </summary>
+        public static T RandElement<T>(RandObject<T>[] objects)
+        {
+            T[] elements = new T[objects.Length];
+            float[] probs = new float[objects.Length];
+            for (int i = 0; i < objects.Length; i++)
+            {
+                elements[i] = objects[i].Element;
+                probs[i] = objects[i].Probability;
+            }
+            return RandElement(elements, probs);
+        }
+
 
         #endregion
 

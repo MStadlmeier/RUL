@@ -14,7 +14,41 @@ namespace TestApp
         static void Main(string[] args)
         {
             char input = ' ';
-            
+            while (input != 'c')
+            {
+                int acount = 0;
+                int bcount = 0;
+                int ccount = 0;
+                int testCount = 10000;
+                RandObject<string>[] randObjs = new RandObject<string>[] { new RandObject<string>("a", 0.8F), new RandObject<string>("b", 0.15F), new RandObject<string>("c", 0.05F) };
+                for (int i = 0; i < testCount; i++)
+                {
+                    string result = Rul.RandElement(randObjs);
+                    switch (result)
+                    {
+                        case "a":
+                            acount++;
+                            break;
+                        case "b":
+                            bcount++;
+                            break;
+                        case "c":
+                            ccount++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                Console.WriteLine("{0}, {1}, {2}", acount, bcount, ccount);
+                Console.WriteLine("{0}, {1}, {2}\n\n", (float)acount / (float)testCount, (float)bcount / (float)testCount, (float)ccount / (float)testCount);
+                input = Console.ReadKey().KeyChar;
+            }
+        }
+
+        static void TestColors()
+        {
+            char input = ' ';
+
             while (input != 'c')
             {
                 int totalR = 0;
@@ -28,9 +62,9 @@ namespace TestApp
                     {
                         Hues hue = (Hues)j;
                         Col randColor = new Col();
-                        if(i < 3)
+                        if (i < 3)
                             randColor = RulCol.RandColor(hue, LuminosityTypes.Light);
-                        else if(i < 6)
+                        else if (i < 6)
                             randColor = RulCol.RandColor(hue, LuminosityTypes.Medium);
                         else
                             randColor = RulCol.RandColor(hue, LuminosityTypes.Dark);
@@ -48,11 +82,9 @@ namespace TestApp
                     }
                 }
                 bmp.Save("M:\\Desktop\\randcolor.bmp");
-                Console.WriteLine("{0} / {1} / {2} ==> {3} ", totalR, totalG, totalB,(totalR + totalG + totalB) / (3*n*n));
+                Console.WriteLine("{0} / {1} / {2} ==> {3} ", totalR, totalG, totalB, (totalR + totalG + totalB) / (3 * n * n));
                 input = Console.ReadKey().KeyChar;
             }
-            
-            
         }
     }
 }
