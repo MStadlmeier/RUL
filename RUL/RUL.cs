@@ -123,53 +123,6 @@ namespace RUL
 
         #endregion
 
-        #region Random Vectors
-
-        /// <summary>
-        /// Returns a random 2-dimensional vector within the specified range
-        /// </summary>
-        /// <param name="lowerBoundX">Lower bound for the x-component</param>
-        /// <param name="upperBoundX">Upper bound for the x-component</param>
-        /// <param name="lowerBoundY">Lower bound for the y-component</param>
-        /// <param name="upperBoundY">Upper bound for the y-component</param>
-        public static Vec2 RandVec2(float lowerBoundX, float upperBoundX, float lowerBoundY, float upperBoundY)
-        {
-            return new Vec2(RandFloat(lowerBoundX, upperBoundX), RandFloat(lowerBoundY, upperBoundY));
-        }
-
-        /// <summary>
-        /// Returns a random 2-dimensional vector within the specified range
-        /// </summary>
-        /// <param name="lowerBound">The lower bound as a vector</param>
-        /// <param name="upperBound">The upper bound as a vector</param>
-        public static Vec2 RandVec2(Vec2 lowerBound, Vec2 upperBound)
-        {
-            return RandVec2(lowerBound.X, upperBound.X, lowerBound.Y, upperBound.Y);
-        }
-
-        /// <summary>
-        /// Returns a 2-dimensional vector whose components can vary from the base vector up to a specified amount.
-        /// </summary>
-        /// <param name="baseVector">The vector that is used as a base for the new one</param>
-        /// <param name="maxXVariance">The highest possible difference between the vectors' x-coordinates</param>
-        /// <param name="maxYVariance">The highest possible difference between the vectors' y-coordinates</param>
-        /// <returns></returns>
-        public static Vec2 RandVec2(Vec2 baseVector, float maxXVariance, float maxYVariance)
-        {
-            return baseVector + new Vec2(RandFloat(-maxXVariance, maxXVariance), RandFloat(-maxYVariance, maxYVariance));
-        }
-
-        /// <summary>
-        /// Returns a random 2-dimensional vector with the length 1
-        /// </summary>
-        public static Vec2 RandUnitVec2()
-        {
-            float rad = RandFloat(0, (float)Math.PI * 2);
-            return new Vec2((float)Math.Cos(rad), (float)Math.Sin(rad));
-        }
-
-        #endregion
-
         #region Noise Generation
 
         /// <summary>

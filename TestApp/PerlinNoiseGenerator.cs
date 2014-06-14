@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RUL;
+using RUL.Vector;
 using System.Drawing;
 namespace TestApp
 {
@@ -16,7 +17,7 @@ namespace TestApp
             Vec2[,] gridPoints = new Vec2[width / GRID_POINT_FREQUENCY, height / GRID_POINT_FREQUENCY];
             for (int x = 0; x < gridPoints.GetLength(0); x++)
                 for (int y = 0; y < gridPoints.GetLength(1); y++)
-                    gridPoints[x, y] = Rul.RandUnitVec2();
+                    gridPoints[x, y] = RulVec.RandUnitVec2();
 
             //Iterate through all pixels
             for (int x = 0; x < width - 1; x++)

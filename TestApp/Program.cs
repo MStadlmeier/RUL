@@ -16,31 +16,30 @@ namespace TestApp
             char input = ' ';
             while (input != 'c')
             {
-                int acount = 0;
-                int bcount = 0;
-                int ccount = 0;
-                int testCount = 10000;
-                RandObject<string>[] randObjs = new RandObject<string>[] { new RandObject<string>("a", 0.8F), new RandObject<string>("b", 0.15F), new RandObject<string>("c", 0.05F) };
-                for (int i = 0; i < testCount; i++)
+                float minX = 0;
+                float minY = 0;
+                float maxX = 0;
+                float maxY = 0;
+                for (int i = 0; i < 100000; i++)
                 {
-                    string result = Rul.RandElement(randObjs);
-                    switch (result)
+                    var vec = RUL.Vector.RulVec.RandVec2(new Vec2(0, 1), (float)(2.5F * Math.PI));
+                    if (i == 0)
                     {
-                        case "a":
-                            acount++;
-                            break;
-                        case "b":
-                            bcount++;
-                            break;
-                        case "c":
-                            ccount++;
-                            break;
-                        default:
-                            break;
+                        minX = vec.X;
+                        minY = vec.Y;
+                        maxX = vec.X;
+                        maxY = vec.Y;
                     }
+                    if (vec.X < minX)
+                        minX = vec.X;
+                    if (vec.Y < minY)
+                        minY = vec.Y;
+                    if (vec.X > maxX)
+                        maxX = vec.X;
+                    if (vec.Y > maxY)
+                        maxY = vec.Y;
                 }
-                Console.WriteLine("{0}, {1}, {2}", acount, bcount, ccount);
-                Console.WriteLine("{0}, {1}, {2}\n\n", (float)acount / (float)testCount, (float)bcount / (float)testCount, (float)ccount / (float)testCount);
+                Console.WriteLine("X : {0} / {1} // Y : {2} / {3}", minX, maxX, minY, maxY);
                 input = Console.ReadKey().KeyChar;
             }
         }
