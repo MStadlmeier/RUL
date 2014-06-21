@@ -79,6 +79,11 @@ namespace RUL
             return (this.X * other.X + this.Y * other.Y);
         }
 
+        public float Distance(Vec2 other)
+        {
+            return (float)Math.Sqrt((other.X - this.X) * (other.X - this.X) + (other.Y - this.Y) * (other.Y - this.Y));
+        }
+
         public override string ToString()
         {
             return String.Format("X: {0} Y: {1}", X, Y);

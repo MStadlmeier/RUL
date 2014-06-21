@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using RUL;
 using RUL.Color;
+using RUL.Noise;
 
 namespace TestApp
 {
@@ -16,30 +17,37 @@ namespace TestApp
             char input = ' ';
             while (input != 'c')
             {
-                float minX = 0;
-                float minY = 0;
-                float maxX = 0;
-                float maxY = 0;
-                for (int i = 0; i < 100000; i++)
+                int w = 400;
+                int h = 400;
+                Bitmap bmp = new Bitmap(w,h);
+                float[,] values = RulNoise.RandPerlinNoise2(w, h);
+                float min = values.Cast<float>().Min();
+                float max = values.Cast<float>().Max();
+                float avg = values.Cast<float>().Average();
+                for (int x = 0; x < w; x++)
                 {
-                    var vec = RUL.Vector.RulVec.RandVec2(new Vec2(0, 1), (float)(2.5F * Math.PI));
-                    if (i == 0)
+                    for (int y = 0; y < h; y++)
                     {
-                        minX = vec.X;
-                        minY = vec.Y;
-                        maxX = vec.X;
-                        maxY = vec.Y;
+                        float val = values[x, y];
+                        Color col;
+                        if (val <= 0.58F)
+                            col = Color.FromArgb(0, 0, 100);
+                        else if (val <= 0.6F)
+                            col = Color.FromArgb(0, 50, 255);
+                        else if (val <= 0.63F)
+                            col = Color.FromArgb(200, 200, 25);
+                        else if (val <= 0.84F)
+                            col = Color.FromArgb(75, 255, 25);
+                        else if (val <= 0.9F)
+                            col = Color.FromArgb(160, 160, 160);
+                        else
+                            col = Color.FromArgb(240, 240, 240);
+                        bmp.SetPixel(x, y, col);
                     }
-                    if (vec.X < minX)
-                        minX = vec.X;
-                    if (vec.Y < minY)
-                        minY = vec.Y;
-                    if (vec.X > maxX)
-                        maxX = vec.X;
-                    if (vec.Y > maxY)
-                        maxY = vec.Y;
                 }
-                Console.WriteLine("X : {0} / {1} // Y : {2} / {3}", minX, maxX, minY, maxY);
+                bmp.Save("M:\\Desktop\\perlintest.bmp");
+                Console.WriteLine("Done.");
+                Console.WriteLine("Min : {0}\nMax : {1}\nAvg : {2}\n", min, max, avg);
                 input = Console.ReadKey().KeyChar;
             }
         }

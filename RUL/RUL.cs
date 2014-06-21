@@ -30,6 +30,15 @@ namespace RUL
         }
 
         /// <summary>
+        /// Returns a random float between 0 and max
+        /// </summary>
+        /// <param name="max">The upper bound for the random value</param>
+        public static float RandFloat(float max)
+        {
+            return RandFloat(0, max);
+        }
+
+        /// <summary>
         /// Returns a random float between min and max, both included
         /// </summary>
         /// <param name="min">The lower bound for the random value</param>
@@ -123,62 +132,6 @@ namespace RUL
 
         #endregion
 
-        #region Noise Generation
-
-        /// <summary>
-        /// Returns a random, one-dimensional array of floats between 0 and 1
-        /// </summary>
-        public static float[] RandNoise1(int length)
-        {
-            ValidateSizeParameters(new object[] { length });
-
-            float[] noise = new float[length];
-            for (int i = 0; i < length; i++)
-                noise[i] = RandFloat();
-            return noise;
-        }
-
-        /// <summary>
-        /// Returns a random, two-dimensional array of floats between 0 and 1
-        /// </summary>
-        public static float[,] RandNoise2(int width, int height)
-        {
-            ValidateSizeParameters(new object[] { width, height });
-
-            float[,] noise = new float[width, height];
-            for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++)
-                    noise[x, y] = RandFloat();
-            return noise;
-        }
-
-        /// <summary>
-        /// Returns a random, three-dimensional array of floats between 0 and 1
-        /// </summary>
-        public static float[, ,] RandNoise3(int width, int height, int depth)
-        {
-            ValidateSizeParameters(new object[] { width, height, depth });
-
-            float[, ,] noise = new float[width, height, depth];
-            for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++)
-                    for (int z = 0; z < depth; z++)
-                        noise[x, y, z] = RandFloat();
-            return noise;
-        }
-
-        //#TODO_Noise
-        public static float[,] RandPerlinNoise2(int width, int height, float zoom)
-        {
-            ValidateSizeParameters(new object[] { width, height });
-            var myval = new int[] { 1, 2, 3 };
-
-            NoiseGenerator texGen = new NoiseGenerator(width, height);
-            return null;
-        }
-
-        #endregion
-
         #region RandomSelections
 
         /// <summary>
@@ -194,7 +147,7 @@ namespace RUL
         /// </summary>
         /// <param name="elements">The selection of elements</param>
         /// <param name="probabilities">The probability for each element</param>
-        public static T RandElement<T>(T[] elements, float[] probabilities)
+        public static T RandElement<T>(T[] elements, params float[] probabilities)
         {
             if (elements.Length == 0)
                 throw new ArgumentException("Element array cannot be empty");
@@ -256,7 +209,7 @@ namespace RUL
                 }
             }
             return elements[elements.Length - 1];
-        }
+        }       
 
         /// <summary>
         /// Returns a random object from the given array of RandObjects
@@ -295,14 +248,7 @@ namespace RUL
 
         }
 
-        private static void ValidateSizeParameters(object[] parameters)
-        {
-            foreach (object p in parameters)
-            {
-                if ((int)p < 0)
-                    throw new ArgumentException("Size cannot be less than zero");
-            }
-        }
+        
 
         #endregion
     }

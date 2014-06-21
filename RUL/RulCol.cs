@@ -221,17 +221,17 @@ namespace RUL.Color
                 //Monochrome colors should stay monochrome
                 if (!monochrome)
                 {
-                    float variance = Rul.RandFloat(0, maxRelativeVariance * GetVarianceFactor(baseColor.R));
+                    float variance = Rul.RandFloat(maxRelativeVariance * GetVarianceFactor(baseColor.R));
                     int r = MathHelper.Clamp(baseColor.R + (int)(Rul.RandSign() * 255 * variance), 0, 255);
-                    variance = Rul.RandFloat(0, maxRelativeVariance * GetVarianceFactor(baseColor.G));
+                    variance = Rul.RandFloat(maxRelativeVariance * GetVarianceFactor(baseColor.G));
                     int g = MathHelper.Clamp(baseColor.G + (int)(Rul.RandSign() * 255 * variance), 0, 255);
-                    variance = Rul.RandFloat(0, maxRelativeVariance * GetVarianceFactor(baseColor.B));
+                    variance = Rul.RandFloat(maxRelativeVariance * GetVarianceFactor(baseColor.B));
                     int b = MathHelper.Clamp(baseColor.B + (int)(Rul.RandSign() * 255 * variance), 0, 255);
                     return new Col(r, g, b, baseColor.A);
                 }
                 else
                 {
-                    float variance = Rul.RandFloat(0, maxRelativeVariance * GetVarianceFactor(baseColor.R));
+                    float variance = Rul.RandFloat(maxRelativeVariance * GetVarianceFactor(baseColor.R));
                     int newValue = MathHelper.Clamp(baseColor.R + (int)(Rul.RandSign() * 255 * variance), 0, 255);
                     return new Col(newValue, newValue, newValue, baseColor.A);
                 }
