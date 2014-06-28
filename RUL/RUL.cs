@@ -7,16 +7,33 @@ namespace RUL
 {
     public static class Rul
     {
+        #region Private
+
+        private static Random _rng;
+        private static int _seed;
+        private static bool _initialized;
+
+        #endregion
+
         #region Public
 
         #region  RNG settings / initialization
 
-        public static void Initialize(int seed)
+        public static void Initialize()
         {
-            RNG.Initialize(seed);
+            _seed = Environment.TickCount;
+            _rng = new Random(_seed);
+            _initialized = true;
         }
 
-        public static int Seed { get { return RNG.Seed; } }
+        public static void Initialize(int seed)
+        {
+            _rng = new Random(seed);
+            _seed = seed;
+            _initialized = true;
+        }
+
+        public static int Seed { get { return _seed; } }
 
         #endregion
 
@@ -26,7 +43,7 @@ namespace RUL
         /// </summary>
         public static float RandFloat()
         {
-            return (float)RNG.NextNumber() / (float)RNG.MAX_VALUE;
+            return (float)RandDouble();
         }
 
         /// <summary>
@@ -35,7 +52,7 @@ namespace RUL
         /// <param name="max">The upper bound for the random value</param>
         public static float RandFloat(float max)
         {
-            return RandFloat(0, max);
+            return (float)RandDouble(0, max);
         }
 
         /// <summary>
@@ -45,12 +62,7 @@ namespace RUL
         /// <param name="max">The upper bound for the random value</param>
         public static float RandFloat(float min, float max)
         {
-            if (min < max)
-                return (min + (max - min) * RandFloat());
-            else if (min == max)
-                return min;
-            else
-                return RandFloat(max, min);
+            return (float)RandDouble(min, max);
         }
 
         /// <summary>
@@ -58,7 +70,18 @@ namespace RUL
         /// </summary>
         public static double RandDouble()
         {
-            return (double)RNG.NextNumber() / (double)RNG.MAX_VALUE;
+            if (!_initialized)
+                Initialize();
+            return _rng.NextDouble();
+        }
+
+        /// <summary>
+        /// Returns a random double between 0 and max
+        /// </summary>
+        /// <param name="max">The upper bound for the random value</param>
+        public static double RandDouble(double max)
+        {
+            return RandDouble() * max;
         }
 
         /// <summary>
@@ -85,23 +108,39 @@ namespace RUL
         /// <returns></returns>
         public static int RandInt(int max, InclusionOptions option = InclusionOptions.Lower)
         {
-            return RandInt(0, max, InclusionOptions.Lower);
+
+            return RandInt(0, max, option);
         }
 
+        /// <summary>
+        /// Returns a random int between min and max. Both bounds are included by default
+        /// </summary>
         public static int RandInt(int min, int max, InclusionOptions option = InclusionOptions.Both)
         {
             if (min < max)
             {
+                //Handle int overflow
+                if (max == int.MaxValue)
+                    if (option == InclusionOptions.Upper)
+                        option = InclusionOptions.None;
+                    else if (option == InclusionOptions.Both)
+                        option = InclusionOptions.Lower;
+                if (min == int.MinValue)
+                    if (option == InclusionOptions.Lower)
+                        option = InclusionOptions.None;
+                    else if (option == InclusionOptions.Both)
+                        option = InclusionOptions.Upper;
+
                 switch (option)
                 {
                     case InclusionOptions.Both:
-                        return RandInRange(min, max);
+                        return RandIntInRange(min, max + 1);
                     case InclusionOptions.Lower:
-                        return RandInRange(min, max - 1);
+                        return RandIntInRange(min, max);
                     case InclusionOptions.Upper:
-                        return RandInRange(min + 1, max);
+                        return RandIntInRange(min + 1, max + 1);
                     case InclusionOptions.None:
-                        return RandInRange(min + 1, max - 1);
+                        return RandIntInRange(min + 1, max);
                     default:
                         throw new ArgumentException("Invalid InclusionOption");
                 }
@@ -113,11 +152,61 @@ namespace RUL
         }
 
         /// <summary>
+        /// Returns a random long between 0 and max. Max is excluded by default
+        /// </summary>
+        /// <param name="max">The upper bound for the random value</param>
+        /// <param name="option">Determines which bounds are included</param>
+        /// <returns></returns>
+        public static long RandLong(long max, InclusionOptions option = InclusionOptions.Lower)
+        {
+            return RandLong(0, max, option);
+        }
+
+        /// <summary>
+        /// Returns a random long between min and max. Both bounds are included by default
+        /// </summary>
+        public static long RandLong(long min, long max, InclusionOptions option = InclusionOptions.Both)
+        {
+            if (min < max)
+            {
+                //Handle long overflow
+                if (max == long.MaxValue)
+                    if (option == InclusionOptions.Upper)
+                        option = InclusionOptions.None;
+                    else if (option == InclusionOptions.Both)
+                        option = InclusionOptions.Lower;
+                if (min == long.MinValue)
+                    if (option == InclusionOptions.Lower)
+                        option = InclusionOptions.None;
+                    else if (option == InclusionOptions.Both)
+                        option = InclusionOptions.Upper;
+
+                switch (option)
+                {
+                    case InclusionOptions.Both:
+                        return RandLongInRange(min, max + 1);
+                    case InclusionOptions.Lower:
+                        return RandLongInRange(min, max);
+                    case InclusionOptions.Upper:
+                        return RandLongInRange(min + 1, max + 1);
+                    case InclusionOptions.None:
+                        return RandLongInRange(min + 1, max);
+                    default:
+                        throw new ArgumentException("Invalid InclusionOption");
+                }
+            }
+            else if (min == max)
+                return min;
+            else
+                return RandLong(max, min, option);
+        }
+
+        /// <summary>
         /// Returns true or false
         /// </summary>
         public static bool RandBool()
         {
-            return RandFloat() < 0.5F;
+            return RandDouble() < 0.5F;
         }
 
         /// <summary>
@@ -125,9 +214,7 @@ namespace RUL
         /// </summary>
         public static int RandSign()
         {
-            if (RandBool())
-                return 1;
-            return -1;
+            return RandBool() ? 1 : -1;
         }
 
         #endregion
@@ -139,7 +226,9 @@ namespace RUL
         /// </summary>
         public static T RandElement<T>(params T[] elements)
         {
-            return elements[RandInt(elements.Length)];
+            if(elements.Length > 0)
+                return elements[RandInt(elements.Length)];
+            throw new ArgumentException("Element array cannot be empty");
         }
 
         /// <summary>
@@ -172,12 +261,12 @@ namespace RUL
 
             //Correct invalid probabilities
             for (int i = 0; i < probabilities.Length; i++)
-                probabilities[i] = MathHelper.Clamp(probabilities[i], 0, 1);                
-            
+                probabilities[i] = MathHelper.Clamp(probabilities[i], 0, 1);
+
             //Make sure the probabilities add up to 1
-            float difference = 1- pSum;
+            float difference = 1 - pSum;
             //Sum too low ? Add missing probability to last element if possible
-            if (!MathHelper.FloatsEqual(difference,0) && difference > 0)
+            if (!MathHelper.FloatsEqual(difference, 0) && difference > 0)
             {
                 for (int i = probabilities.Length - 1; i <= 0 && difference > 0 && !MathHelper.FloatsEqual(difference, 0); i++)
                 {
@@ -187,9 +276,9 @@ namespace RUL
                 }
             }
             //Sum too high ? Subtract excess probability from last element if possible
-            else if (!MathHelper.FloatsEqual(difference,0) && difference < 0)
+            else if (!MathHelper.FloatsEqual(difference, 0) && difference < 0)
             {
-                for (int i = probabilities.Length - 1; i <= 0 && difference < 0 && !MathHelper.FloatsEqual(difference,0); i++)
+                for (int i = probabilities.Length - 1; i <= 0 && difference < 0 && !MathHelper.FloatsEqual(difference, 0); i++)
                 {
                     float buffer = probabilities[i];
                     probabilities[i] += Math.Max(buffer, difference);
@@ -209,7 +298,7 @@ namespace RUL
                 }
             }
             return elements[elements.Length - 1];
-        }       
+        }
 
         /// <summary>
         /// Returns a random object from the given array of RandObjects
@@ -233,22 +322,24 @@ namespace RUL
 
         #region Private
 
-        private static int RandInRange(int lower, int upper)
+        private static int RandIntInRange(int lower, int upper)
         {
-            if (lower < upper)
-            {
-                int diff = upper - lower;
-                int r = lower + (int)((diff + 1) * RandFloat());
-                return MathHelper.Clamp(r, lower, upper);
-            }
-            else if (lower == upper)
-                return lower;
-            else
-                return RandInRange(upper, lower);
+            if (!_initialized)
+                Initialize();
 
+            return _rng.Next(lower, upper);            
         }
 
-        
+        private static long RandLongInRange(long lower, long upper)
+        {
+            if (!_initialized)
+                Initialize();
+
+            byte[] randBytes = new byte[8];
+            _rng.NextBytes(randBytes);
+            long r = BitConverter.ToInt64(randBytes, 0);
+            return Math.Abs(r % (upper - lower)) + lower;
+        }
 
         #endregion
     }

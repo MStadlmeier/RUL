@@ -33,6 +33,26 @@ namespace RUL
         /// <summary>
         /// Clamps the value between lower and upper bound
         /// </summary>
+        internal static long Clamp(long value, long lowerBound, long upperBound)
+        {
+            if (lowerBound < upperBound)
+            {
+                if (value < lowerBound)
+                    return lowerBound;
+                else if (value > upperBound)
+                    return upperBound;
+                else
+                    return value;
+            }
+            else if (lowerBound == upperBound)
+                return lowerBound;
+            else
+                throw new ArgumentException("Lower bound must be less than upper bound");
+        }
+
+        /// <summary>
+        /// Clamps the value between lower and upper bound
+        /// </summary>
         internal static float Clamp(float value, float lowerBound, float upperBound)
         {
             if (lowerBound < upperBound)
