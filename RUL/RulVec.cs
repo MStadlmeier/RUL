@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace RUL.Vector
+namespace RUL
 {
     public static class RulVec
     {
