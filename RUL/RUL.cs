@@ -207,6 +207,9 @@ namespace RUL
             else
                 return RandLong(max, min, option);
         }
+        #endregion 
+
+        #region Misc
 
         /// <summary>
         /// Returns true or false
@@ -222,6 +225,21 @@ namespace RUL
         public static int RandSign()
         {
             return RandBool() ? 1 : -1;
+        }
+
+        /// <summary>
+        /// Shuffles the elements of the given array
+        /// </summary>
+        public static void Shuffle<T>(params T[] elements)
+        {
+            //Fisher-Yates shuffle
+            for (int i = 0; i < elements.Length; i++)
+            {
+                int j = RandInt(i, elements.Length, InclusionOptions.Lower);
+                T temp = elements[j];
+                elements[j] = elements[i];
+                elements[i] = temp;
+            }
         }
 
         #endregion
