@@ -38,19 +38,6 @@ namespace RUL
         }
 
         /// <summary>
-        /// Returns a 2-dimensional vector whose components can vary from the base vector by a limited amount.
-        /// </summary>
-        /// <param name="baseVector">The vector that is used as a base for the new one</param>
-        /// <param name="maxXVariance">The highest possible difference between the vectors' x-coordinates</param>
-        /// <param name="maxYVariance">The highest possible difference between the vectors' y-coordinates</param>
-        /// <returns></returns>
-        public static Vec2 RandVec2(Vec2 baseVector, float maxXVariance, float maxYVariance)
-        {
-            return baseVector + new Vec2(Rul.RandFloat(-maxXVariance, maxXVariance), Rul.RandFloat(-maxYVariance, maxYVariance));
-        }
-
-
-        /// <summary>
         /// Returns a randomly rotated version of the given base vector
         /// </summary>
         /// <param name="baseVector">The vector that is used as a base for the new one</param>
@@ -119,19 +106,6 @@ namespace RUL
             Vec3 difference = pointB - pointA;
             return pointA + difference * Rul.RandFloat();
 
-        }
-
-        /// <summary>
-        /// Returns a 3-dimensional vector whose components can vary from the base vector by a limited amount.
-        /// </summary>
-        /// <param name="baseVector">The vector that is used as a base for the new one</param>
-        /// <param name="maxXVariance">The highest possible difference between the vectors' x-coordinates</param>
-        /// <param name="maxYVariance">The highest possible difference between the vectors' y-coordinates</param>
-        /// <param name="maxZVariance">The highest possible difference between the vectors' z-coordinates</param>
-        /// <returns></returns>
-        public static Vec3 RandVec3(Vec3 baseVector, float maxXVariance, float maxYVariance, float maxZVariance)
-        {
-            return baseVector + new Vec3(Rul.RandFloat(-maxXVariance, maxXVariance), Rul.RandFloat(-maxYVariance, maxYVariance), Rul.RandFloat(-maxZVariance, maxZVariance));
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace RUL
         #region Private Fields
 
         private static Dictionary<Hues, Dictionary<LuminosityTypes, Col>> _predefinedColors;
-        private const float DEFAULT_MAX_VARIANCE = 0.1F;
+        private const float DEFAULT_MAX_VARIANCE = 0.15F;
 
         #endregion
 
@@ -80,11 +80,16 @@ namespace RUL
         }
 
         /// <summary>
-        /// Returns a random color whose r,g,b and a components are between those of colA and colB
+        /// Returns a color that is randomly interpolated between the given colors
         /// </summary>
-        public static Col RandColor(Col colA, Col colB)
+        public static Col RandColorBetween(Col colA, Col colB)
         {
-            return new Col(Rul.RandInt(colA.R, colB.R), Rul.RandInt(colA.G, colB.G), Rul.RandInt(colA.B, colB.B), Rul.RandInt(colA.A, colB.A));
+            float v = Rul.RandFloat();
+            int r = (int)Math.Round(colA.R + (colB.R - colA.R) * v);
+            int g = (int)Math.Round(colA.G + (colB.G - colA.G) * v);
+            int b = (int)Math.Round(colA.B + (colB.B - colA.B) * v);
+            int a = (int)Math.Round(colA.A + (colB.A - colA.A) * v);
+            return new Col(r, g, b, a);
         }
 
         #endregion
@@ -121,7 +126,7 @@ namespace RUL
             {
                { LuminosityTypes.Light, new Col(255,0,0) },
                { LuminosityTypes.Medium, new Col(165,0,0) },
-               { LuminosityTypes.Dark, new Col(75,0,0) }
+               { LuminosityTypes.Dark, new Col(100,0,0) }
 
             };
             Dictionary<LuminosityTypes, Col> green = new Dictionary<LuminosityTypes, Col>()
@@ -134,22 +139,22 @@ namespace RUL
             Dictionary<LuminosityTypes, Col> blue = new Dictionary<LuminosityTypes, Col>()
             {
                { LuminosityTypes.Light, new Col(0,0,255) },
-               { LuminosityTypes.Medium, new Col(0,0,165) },
-               { LuminosityTypes.Dark, new Col(0,0,75) }
+               { LuminosityTypes.Medium, new Col(0,0,175) },
+               { LuminosityTypes.Dark, new Col(0,0,100) }
 
             };
             Dictionary<LuminosityTypes, Col> orange = new Dictionary<LuminosityTypes, Col>()
             {
-               { LuminosityTypes.Light, new Col(255,165,0) },
-               { LuminosityTypes.Medium, new Col(255,140,0) },
-               { LuminosityTypes.Dark, new Col(228,125,0) }
+               { LuminosityTypes.Light, new Col(255,160,0) },
+               { LuminosityTypes.Medium, new Col(235,145,0) },
+               { LuminosityTypes.Dark, new Col(200,110,0) }
 
             };
             Dictionary<LuminosityTypes, Col> yellow = new Dictionary<LuminosityTypes, Col>()
             {
                { LuminosityTypes.Light, new Col(255,255,0) },
-               { LuminosityTypes.Medium, new Col(230,230,0) },
-               { LuminosityTypes.Dark, new Col(205,205,0) }
+               { LuminosityTypes.Medium, new Col(220,220,0) },
+               { LuminosityTypes.Dark, new Col(200,200,0) }
 
             };
             Dictionary<LuminosityTypes, Col> cyan = new Dictionary<LuminosityTypes, Col>()
@@ -208,10 +213,10 @@ namespace RUL
         /// </summary>
         private static float GetVarianceFactor(int value)
         {
-            //This method works best with values > 100
-            if(value >= 100) 
+            //This method works best with values > 125
+            if(value >= 125) 
                 return (float)(value * value) / (255F * 255F);
-            return 0.15F;
+            return 0.24F;
         }
 
         private static Col RandomizeColor(Col baseColor, float maxRelativeVariance,bool monochrome = false)
