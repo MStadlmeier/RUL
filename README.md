@@ -1,7 +1,7 @@
 RUL
 ===
 
-Version 1.0.0
+Version 1.0.0  
 This library is designed to simplify randomization and the creation of procedurally generated content. RUL is capable of generating 
 pseudo-random numbers, vectors, colors and noise, as well as randomly modifying existing objects.
 
@@ -30,13 +30,13 @@ Code samples :
 
     string name = Rul.RandElement("Jon","Ned","Bran"); //Returns one of the given elements
 
-    int probablyOne = Rul.RandElement(new int[] {1,2,3},0.9); //Returns 1 in nine out of ten cases
+    int probablyOne = Rul.RandElement(new int[] {1,2,3},0.9F); //Returns 1 in nine out of ten cases
 
-    Vec3 unitVec = RulVec.RandUnitVec3(); //Returns random 3D vector with length 1
+    Vec3 unitVec = RulVec.RandUnitVec3(); //Returns a random 3D vector with length 1
     
-    Col lightColor = RulCol.RandCol(200); //Returns light color
+    Col lightColor = RulCol.RandCol(200); //Returns a light color
     
-    Col darkRed = RulCol.RandCol(Hues.Red, LuminosityTypes.Dark); //Returns dark shade of red
+    Col darkRed = RulCol.RandCol(Hues.Red, LuminosityTypes.Dark); //Returns a dark shade of red
 
     float[,] noise = RulNoise.RandPerlinNoise2(400,400); //Returns perlin noise 
 
