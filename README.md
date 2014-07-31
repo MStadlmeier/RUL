@@ -38,7 +38,7 @@ Code samples :
     
     Col darkRed = RulCol.RandCol(Hues.Red, LuminosityTypes.Dark); //Returns a dark shade of red
 
-    float[,] noise = RulNoise.RandPerlinNoise2(400,400); //Returns perlin noise 
+    float[,] noise = RulNoise.RandSimplexNoise2(400,400); //Returns simplex noise 
 
 License
 -----------
